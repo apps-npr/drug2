@@ -151,7 +151,7 @@ document.getElementById('nextMonth').onclick=async()=>{ current=new Date(current
 monthTitle.onclick=async()=>{ current=new Date(); await refreshCalendar(); };
 document.getElementById('todayBtn').onclick=async()=>{ current=new Date(); dateInput.value=ymd(new Date()); await Promise.all([refreshCalendar(),refreshDay(),refreshSummary()]); };
 document.getElementById('printBtn').onclick=()=>{ const d=dateInput.value||ymd(new Date()); window.open('print.html?date='+encodeURIComponent(d),'_blank'); };
-document.getElementById('flushBtn').onclick=async()=>{ await window.open("https://apps-npr.github.io/Sticker/","_blank"); };
+document.getElementById('flushBtn').onclick=async()=>{ await window.open("https://apps-npr.github.io/Sticker1/","_blank"); };
 drugSelect.addEventListener('change',()=>loadStrengths(drugSelect.value));
 
 document.getElementById('addForm').addEventListener('submit', async (e)=>{
