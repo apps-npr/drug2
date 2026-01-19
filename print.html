@@ -105,8 +105,11 @@ function goSticker(){
   }
 
   const payload = btoa(JSON.stringify(items));
-  const url = 'https://apps-npr.github.io/Sticker1/?payload=' + payload;
-  window.open(url,'_blank');
+  const url =
+  'https://apps-npr.github.io/Sticker/?items=' +
+  items.map(i => `${i.name}|${i.qty}`).join(';');
+
+window.open(url,'_blank');
 }
 </script>
 </body>
