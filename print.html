@@ -1,0 +1,67 @@
+
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ใบผลิต - พิมพ์ A5</title>
+  <link rel="stylesheet" href="print.css">
+</head>
+<body>
+  <div id="sheet">
+    <header>
+      <div class="title">ใบเบิกยาเตรียมสำหรับผู้ป่วยเฉพาะราย</div>
+      <div class="date" id="dateBox"></div>
+    </header>
+<div class="no-print" style="margin:8px 0;text-align:right">
+  <button onclick="goSticker()" style="padding:6px 12px;font-size:14px">
+    ไปพิมพ์สติกเกอร์
+  </button>
+</div>
+
+    <section>
+      <table id="tbl">
+        <thead><tr><th>ลำดับ</th><th>ชื่อยา</th><th>ความแรง</th><th>จำนวนขวด</th><th>วัตถุดิบ/เม็ดยา</th><th>Location</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+    <footer>
+      <div>ลงชื่อผู้เตรียม ........................................</div>
+      <div>ลงชื่อผู้ตรวจสอบ .......................................</div>
+    </footer>
+  </div>
+<script>
+const GAS_BASE='https://script.google.com/macros/s/AKfycbyyuxt4M5vC2NINYvawjd0zB5km0SrzvCqZL1PxENgqB3sDH8krJDJvTknmyL5_zBHr2g/exec';
+const params = new URLSearchParams(location.search);
+const date = params.get('date');
+document.getElementById('dateBox').textContent = 'วันที่ ' + date;
+async function api(path, payload){
+  try{const url=GAS_BASE+'?action='+encodeURIComponent(path)+'&payload='+encodeURIComponent(JSON.stringify(payload||{}))+'&_ts='+Date.now();
+      const res=await fetch(url); if(!res.ok) throw new Error('HTTP '+res.status); return res.json();}
+  catch(e){const url2=GAS_BASE+'?action='+encodeURIComponent(path);
+           const res2=await fetch(url2,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload||{})}); return res2.json();}
+}
+(async()=>{
+  const r=await api('computeForDate',{date});
+  const tb=document.querySelector('#tbl tbody');
+  (r.lines||[]).forEach((x,i)=>{const tr=document.createElement('tr');
+    const comp=(x.components||'').replace(/\n/g,'<br>');
+    tr.innerHTML=`<td>${i+1}</td><td>${x.drug}</td><td>${x.strength}</td><td>${x.bottles}</td><td>${comp||'-'}</td><td>${(x.locations||'-').replace(/\n/g,'<br>')}</td>`;
+    tb.appendChild(tr);});
+  setTimeout(()=>window.print(),200);
+
+function goSticker(){
+  const items = (r.lines||[]).map(x=>{
+    // ใช้ชื่อวัตถุดิบหลัก + จำนวนเม็ดรวม
+    const name = (x.components||'').split('×')[0].trim();
+    return { name: name, qty: x.total_tabs||1 };
+  }).filter(x=>x.name);
+  const payload = btoa(JSON.stringify(items));
+  const url = 'https://apps-npr.github.io/Sticker/?payload=' + payload;
+  window.open(url,'_blank');
+}
+
+})();
+</script>
+</body>
+</html>

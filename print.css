@@ -1,0 +1,10 @@
+@page{size:A5;margin:8mm} *{box-sizing:border-box}
+body{margin:0;font-family:Prompt,system-ui,sans-serif;color:#111}
+#sheet{width:148mm; min-height:210mm; padding:8mm; background:#fff}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6mm}
+.title{font-weight:700;font-size:16px}
+.date{font-size:14px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{border:1px solid #333;padding:3px 4px;vertical-align:top}
+th:nth-child(1){width:10mm} th:nth-child(2){width:45mm} th:nth-child(3){width:18mm} th:nth-child(4){width:18mm} th:nth-child(5){width:40mm} th:nth-child(6){width:18mm}
+footer{display:flex;justify-content:space-between;margin-top:8mm;font-size:12px}
